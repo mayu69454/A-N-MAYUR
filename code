@@ -1,0 +1,48 @@
+Detailed code Add commentMore actions
+pip install pandas openpyxl must be installed 
+
+import pandas as pd
+import numpy as np
+
+# Load the dataset
+# Replace with your actual file path or name
+df = pd.read_csv('medical_appointment_raw.csv')  # Use read_excel() if using Excel
+
+print("First 5 rows:\n", df.head())
+print("\nDataset Info:")
+print(df.info())
+print("\nMissing Values:\n", df.isnull().sum())
+
+# Drop rows with any null values
+df = df.dropna()
+
+df = df.drop_duplicates()
+
+# Standardize gender
+df['Gender'] = df['Gender'].str.upper().map({'M': 'Male', 'F': 'Female'})
+
+# Standardize No-show
+df['No-show'] = df['No-show'].str.strip().str.capitalize()
+
+df['ScheduledDay'] = pd.to_datetime(df['ScheduledDay'], errors='coerce')
+df['AppointmentDay'] = pd.to_datetime(df['AppointmentDay'], errors='coerce')
+
+# Remove timezone info (Excel compatibility)
+df['ScheduledDay'] = df['ScheduledDay'].dt.tz_localize(None)
+df['AppointmentDay'] = df['AppointmentDay'].dt.tz_localize(None)
+
+# Remove negative or invalid ages
+df['Age'] = df['Age'].apply(lambda x: x if x >= 0 else np.nan)
+
+# Drop rows with invalid ages
+df = df.dropna(subset=['Age'])
+
+df.columns = df.columns.str.lower().str.replace(' ', '_')
+
+# Save as CSV
+df.to_csv('medical_appointment_cleaned.csv', index=False)
+
+# Optionally, save as Excel
+# df.to_excel('medical_appointment_cleaned.xlsx', index=False)
+
+print("\n✅ Cleaning complete. Cleaned dataset saved as 'medical_appointment_cleaned.csv'")
