@@ -1,0 +1,16 @@
+Summary Add commentMore actions
+# Sample Input Columns
+Patient ID
+Name
+Gender
+ScheduledDay
+AppointmentDay
+Age
+No-show
+# Sample Output Summary
+Summary of Cleaning:
+Removed duplicates
+Standardized Gender and No-show values
+Converted date columns to datetime
+Removed rows with invalid ages
+Cleaned column names (snake_case)
